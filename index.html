@@ -13,16 +13,37 @@
             height: 250px;
             width: 250px;
         }
+
+        .mensagem{
+            color: brown;
+            font-size: large;
+        }
+
     </style>
 </head>
 <body>
     <h1>Jogo pagina</h1>
-    <div id="meuPersonagem" class="container-player">
+    <form >
+        <label for="usuario">Digite seu nome</label>
+        <input type="text" name="usuario" id="usuario">
+        <button type="submit">Salvar</button>
+    </form>
 
-    </div>
+    <p class="mensagem"> Esperando outro jogador</p>
+
+    <div id="meuPersonagem" class="container-player"></div>
+    <div id="meuOponente" class="container-player"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
+
+        const formulario = document.getElementsByTagName("form")[0];
+
+        formulario.addEventListener('submit', (e) =>{
+            e.preventDefault();
+            var nome = usuario.value;
+            socket.emit("meu-nome", nome);
+        })
 
         socket.on("loadChar", isso => {
             var nome = document.createElement("p");

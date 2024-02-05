@@ -19,13 +19,17 @@ async function main(){
         res.sendFile(join(__dirname, "personagens.json"));
     })
 
-    var listaPersonagens = pegarPersonagens();
     io.on("connection", async (socket) => {
         var usuarioId = socket.id;
-
-        var numeroAleatorio = Math.random() * listaPersonagens.length;
-        const personagem = listaPersonagens.splice(numeroAleatorio, 1)[0];
+        
+        var listaPersonagens = await pegarPersonagens();
+        var numeroAleatorio = Math.floor(Math.random() * listaPersonagens.length);
+        const personagem =  listaPersonagens.splice( numeroAleatorio, 1)[0];
         socket.emit("loadChar", personagem);
+
+        socket.on("meu-nome", async (nome) => {
+            socket.nome = nome; 
+        });
 
     });
 
