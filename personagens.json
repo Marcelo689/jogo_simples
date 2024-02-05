@@ -1,0 +1,16 @@
+{
+    "personages" : [
+        {
+            "name": "Mashle",
+            "img" : "https://hull.geekship.com.br/wp-content/uploads/2023/07/Captura-de-tela-2023-07-03-145749.png",
+            "attack": 3000,
+            "defense": 2000
+        },
+        {
+            "name": "Frieren",
+            "img" : "https://i.pinimg.com/736x/55/1f/c4/551fc47b0a1d240f5f7d28b4fe5b1994.jpg",
+            "attack": 5000,
+            "defense": 1000
+        }
+    ]
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 1</title>
+    <style>
+        .class-name{
+            color: blue;
+        }
+        .container-player img{
+            display: flex ;
+            height: 250px;
+            width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jogo pagina</h1>
+    <div id="meuPersonagem" class="container-player">
+
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        socket.on("loadChar", isso => {
+            var nome = document.createElement("p");
+            nome = isso.name;
+            nome.className = "class-name"
+
+            var imagem = document.createElement("img");
+            imagem.src = isso.img;
+
+            var pAttack = document.createElement("p");
+            pAttack.textContent = "attack : " + isso.attack;
+
+            var pDefense = document.createElement("p");
+            pDefense.textContent =  "defense : " + isso.defense;
+
+            const meuPersonagemDiv = document.getElementById("meuPersonagem");
+            meuPersonagemDiv.append(nome);
+            meuPersonagemDiv.append(imagem);
+            meuPersonagemDiv.append(pAttack);
+            meuPersonagemDiv.append(pDefense);
+        })
+    </script>
+</body>
+</html>
