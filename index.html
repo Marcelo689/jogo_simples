@@ -43,6 +43,7 @@
         .btn-lutar{
             background-color: aquamarine;
             color: black;
+            display: none;
             padding: 20px;
         }
     </style>
@@ -134,6 +135,7 @@
             atualizaNome(document.getElementsByClassName("mensagem")[0], nomePreechido);
             
             meuPersonagemDiv.style.display = "block";
+            document.getElementsByClassName("btn-lutar")[0].style.display = "block";
         })
 
         function atualizaNome(elemento, nome){
