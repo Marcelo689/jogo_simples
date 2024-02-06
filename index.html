@@ -87,7 +87,9 @@
             const meuOponenteDiv = document.getElementById("meuOponente");
             cardEmMesa2 = personagem;
             loadOponent(personagem, vida);
-            renderizaNome(nomeOponente, meuOponenteDiv);
+
+            const containerVidaOponente = document.getElementById("containerVidaOponente");
+            renderizaNome(nomeOponente, containerVidaOponente);
             meuOponenteDiv.style.display = "block";
         });
 
@@ -114,6 +116,12 @@
             const meuPersonagemDiv = document.getElementById("meuPersonagem");
             cardEmMesa1 = personagem;
             loadChar(personagem, vida);
+            
+            const containerVida = document.getElementById("containerVidaPersonagem");
+            const pNome = document.createElement("p");
+            pNome.textContent = nomePreenchido;
+            containerVida.prepend(pNome);
+
             atualizaNome(document.getElementsByClassName("mensagem")[0], nomePreenchido);
             meuPersonagemDiv.style.display = "block";
             document.getElementsByClassName("btn-lutar")[0].style.display = "block";
