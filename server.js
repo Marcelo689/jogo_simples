@@ -74,7 +74,7 @@ async function main(){
             jogador2.personagem = card2;
 
             jogador1.mySocket.emit("reloadBoard", jogador1.personagem, jogador1.mySocket.vida, jogador2.personagem, jogador2.mySocket.vida);
-            jogador2.mySocket.emit("reloadBoard", jogador1.personagem, jogador1.mySocket.vida, jogador2.personagem, jogador2.mySocket.vida);
+            jogador2.mySocket.emit("reloadBoard", jogador2.personagem, jogador2.mySocket.vida, jogador1.personagem, jogador1.mySocket.vida);
         });
     });
 
