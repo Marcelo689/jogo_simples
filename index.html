@@ -81,59 +81,35 @@
             formulario.style.display = "none";
         })
 
-        socket.on("loadOponent",( nomePreechido , personagem, nomeOponente) => {
-            cardEmMesa2 = personagem;
-            var nome = document.createElement("p");
-            nome = personagem.name;
-            nome.className = "class-name"
-
-            var imagem = document.createElement("img");
-            imagem.src = personagem.img;
-
-            var pAttack = document.createElement("p");
-            pAttack.textContent = "attack : " + personagem.attack;
-
-            var pDefense = document.createElement("p");
-            pDefense.textContent =  "defense : " + personagem.defense;
-
+        socket.on("loadOponent",( vida , personagem, nomeOponente) => {
             const meuOponenteDiv = document.getElementById("meuOponente");
-            meuOponenteDiv.append(nome);
-            meuOponenteDiv.append(imagem);
-            meuOponenteDiv.append(pAttack);
-            meuOponenteDiv.append(pDefense);
-
-            const pNomeOponente = document.createElement("p");
-            pNomeOponente.textContent = nomeOponente;
-            pNomeOponente.className = "op-name";
-            meuOponenteDiv.prepend(pNomeOponente);
-
-            const divOponente = document.getElementById("meuOponente");
-            divOponente.style.display = "block";
+            cardEmMesa2 = personagem;
+            loadOponent(personagem, vida);
+            renderizaNome(nomeOponente, meuOponenteDiv);
+            meuOponenteDiv.style.display = "block";
         });
 
-        socket.on("loadChar", ( nomePreechido , personagem) => {
-            cardEmMesa1 = personagem;
-            var nome = document.createElement("p");
-            nome = personagem.name;
-            nome.className = "class-name";
+        function renderizaNome(nome, container){
+            const pNomeOponente = document.createElement("p");
+            pNomeOponente.textContent = nome;
+            container.prepend(pNomeOponente);
+        }
 
-            var imagem = document.createElement("img");
-            imagem.src = personagem.img;
+        function renderizaBarraVida(vida, container){
+            const barraVida = document.createElement("div");
+            barraVida.style.width = (vida / 10).toString()+"px";
+            barraVida.style.height = "20px";
+            barraVida.style.margin = "10px";
+            barraVida.style.backgroundColor = "lightgreen";
 
-            var pAttack = document.createElement("p");
-            pAttack.textContent = "attack : " + personagem.attack;
+            container.prepend(barraVida);
+        }
 
-            var pDefense = document.createElement("p");
-            pDefense.textContent =  "defense : " + personagem.defense;
-
+        socket.on("loadChar", (nomePreenchido, vida , personagem) => {
             const meuPersonagemDiv = document.getElementById("meuPersonagem");
-            meuPersonagemDiv.append(nome);
-            meuPersonagemDiv.append(imagem);
-            meuPersonagemDiv.append(pAttack);
-            meuPersonagemDiv.append(pDefense);
-
-            atualizaNome(document.getElementsByClassName("mensagem")[0], nomePreechido);
-            
+            cardEmMesa1 = personagem;
+            loadChar(personagem, vida);
+            atualizaNome(document.getElementsByClassName("mensagem")[0], nomePreenchido);
             meuPersonagemDiv.style.display = "block";
             document.getElementsByClassName("btn-lutar")[0].style.display = "block";
         })
@@ -144,14 +120,14 @@
             elemento.style.display = "none";
         }
 
-        socket.on("reloadBoard", (card1, card2) => {
-            loadChar(card1);
-            loadOponent(card2);
+        socket.on("reloadBoard", (card1, vida1, card2, vida2) => {
+            loadChar(card1, vida1);
+            loadOponent(card2, vida2);
         });
 
-        function loadChar(card1){
+        function loadChar(card1, vida){
             var nome = document.createElement("p");
-            nome = card1.name;
+            nome.textContent = card1.name;
             nome.className = "class-name";
 
             var imagem = document.createElement("img");
@@ -175,9 +151,11 @@
             if(card1.alive == false){
                 meuPersonagemDiv.style.opacity = "0.1";
             }
+
+            renderizaBarraVida(vida, meuPersonagemDiv);
         }
         
-        function loadOponent(card2){
+        function loadOponent(card2, vida){
             var nome = document.createElement("p");
             nome = card2.name;
             nome.className = "class-name";
@@ -198,16 +176,13 @@
             meuOponenteDiv.append(pAttack);
             meuOponenteDiv.append(pDefense);
 
-            // const pNomeOponente = document.createElement("p");
-            // pNomeOponente.textContent = nomeOponente;
-            // pNomeOponente.className = "op-name";
-            // meuOponenteDiv.prepend(pNomeOponente);
-
             meuOponenteDiv.style.display = "block";
             
             if(card2.alive == false){
                 meuOponenteDiv.style.opacity = "0.1";
             }
+
+            renderizaBarraVida(vida, meuOponenteDiv);
         }
     
         function cardsLutem(){

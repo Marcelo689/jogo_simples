@@ -29,31 +29,38 @@ async function main(){
         
         socket.on("meu-nome", async (nome) => {
             socket.nome = nome; 
+            socket.vida = 10000;
             players.push({ mySocket : socket, personagem: personagem })
             if(players.length  == 2){
                 const jogador1 = players[0];
-                jogador1.mySocket.emit("loadChar", jogador1.mySocket.nome, jogador1.personagem);
-                const jogador2 =players[1];
-                jogador2.mySocket.emit("loadChar", jogador2.mySocket.nome, jogador2.personagem);
+                jogador1.mySocket.emit("loadChar", jogador1.mySocket.nome, jogador1.mySocket.vida, jogador1.personagem);
+                const jogador2 = players[1];
+                jogador2.mySocket.emit("loadChar", jogador2.mySocket.nome, jogador2.mySocket.vida, jogador2.personagem);
 
-                jogador2.mySocket.emit("loadOponent", jogador1.mySocket.nome, jogador1.personagem, jogador1.mySocket.nome);
-                jogador1.mySocket.emit("loadOponent", jogador2.mySocket.nome, jogador2.personagem, jogador2.mySocket.nome);
+                jogador2.mySocket.emit("loadOponent", jogador1.mySocket.vida, jogador1.personagem, jogador1.mySocket.nome);
+                jogador1.mySocket.emit("loadOponent", jogador2.mySocket.vida, jogador2.personagem, jogador2.mySocket.nome);
             }
         });
 
         socket.on("batalhar", async (card1, card2) => {
+            const jogador1 = players[0];
+            const jogador2 = players[1];
+
             card2.defense = card2.defense - card1.attack;
             card1.defense = card1.defense - card2.attack;
 
             if(card1.defense < 0){
                 card1.alive = false;
+                jogador1.mySocket.vida += card1.defense;
             }
             
             if(card2.defense < 0){
                 card2.alive = false;
+                jogador2.mySocket.vida += card2.defense;
             }
 
-            socket.emit("reloadBoard", card1, card2);
+            jogador1.mySocket.emit("reloadBoard", card1, jogador1.mySocket.vida, card2, jogador2.mySocket.vida);
+            jogador2.mySocket.emit("reloadBoard", card1, jogador1.mySocket.vida, card2, jogador2.mySocket.vida);
         });
     });
 
