@@ -54,7 +54,7 @@
         <input type="text" name="usuario" id="usuario">
         <button type="submit">Salvar</button>
     </form>
-
+    <div id="mensagem"></div>
     <p class="mensagem"> Esperando outro jogador</p>
 
     <div id="containerVidaPersonagem"></div>
@@ -169,6 +169,27 @@
             renderizaBarraVida(vida, divVidaPersonagem);
         }
         
+        socket.on("escolherNovoCard", () => {
+            var div = document.createElement("div");
+
+            div.innerText = "selecione um novo card";
+            div.style.padding = "20px";
+            div.style.margin = "auto";
+            div.style.marginTop = "40vh";
+            div.style.textAlign = "center";
+            div.style.color = "red";
+            div.style.backgroundColor = "black";
+            div.style.zIndex = 20;
+
+            var divMensagem = document.getElementById("mensagem");
+            divMensagem.append(div);
+
+            setTimeout(() => {
+                divMensagem.innerHTML = "";
+                divMensagem.style.zIndex = -2;
+            }, 3000);
+        })
+
         function loadOponent(card2, vida){
             var nome = document.createElement("p");
             nome = card2.name;

@@ -45,6 +45,13 @@ async function main(){
         socket.on("batalhar", async (card1, card2) => {
             const jogador1 = players[0];
             const jogador2 = players[1];
+            if(jogador1.personagem.alive == false){
+                jogador1.mySocket.emit("escolherNovoCard");
+            }
+
+            if(jogador2.personagem.alive == false){
+                jogador2.mySocket.emit("escolherNovoCard");
+            }
 
             card2.defense = card2.defense - card1.attack;
             card1.defense = card1.defense - card2.attack;
@@ -52,12 +59,14 @@ async function main(){
             if(card1.defense < 0){
                 card1.alive = false;
                 players[0].mySocket.vida += card1.defense;
+                jogador1.personagem.alive = card1.alive;
             }
             jogador1.personagem.defense = card1.defense;
             
             if(card2.defense < 0){
                 card2.alive = false;
                 players[1].mySocket.vida += card2.defense;
+                jogador2.personagem.alive = card2.alive;
             }
             jogador2.personagem.defense = card2.defense;
 

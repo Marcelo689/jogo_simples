@@ -18,7 +18,8 @@
             "name": "Stark",
             "img" : "https://letsotaku.com/upload/editor/qqf00.jpg",
             "attack" : 3000,
-            "defense":8000
+            "defense":8000,
+            "alive": true
         }
     ]
 }
