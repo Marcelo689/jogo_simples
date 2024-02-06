@@ -42,8 +42,8 @@ async function main(){
         });
 
         socket.on("batalhar", async (card1, card2) => {
-            card1.defense = card2.defense - card1.attack;
-            card2.defense = card1.defense - card2.attack;
+            card2.defense = card2.defense - card1.attack;
+            card1.defense = card1.defense - card2.attack;
 
             if(card1.defense < 0){
                 card1.alive = false;
