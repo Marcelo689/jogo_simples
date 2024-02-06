@@ -57,12 +57,14 @@
 
     <p class="mensagem"> Esperando outro jogador</p>
 
+    <div id="containerVidaPersonagem"></div>
     <div id="meuPersonagem" class="container-player">
         <p class="my-name"></p>
     </div>
 
     <button class="btn-lutar"  onclick="cardsLutem()">Batalhar</button>
 
+    <div id="containerVidaOponente"></div>
     <div id="meuOponente" class="container-player"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -102,6 +104,7 @@
             barraVida.style.margin = "10px";
             barraVida.style.backgroundColor = "lightgreen";
 
+            container.innerHTML = "";
             container.prepend(barraVida);
         }
 
@@ -152,7 +155,8 @@
                 meuPersonagemDiv.style.opacity = "0.1";
             }
 
-            renderizaBarraVida(vida, meuPersonagemDiv);
+            const divVidaPersonagem = document.getElementById("containerVidaPersonagem");
+            renderizaBarraVida(vida, divVidaPersonagem);
         }
         
         function loadOponent(card2, vida){
@@ -179,10 +183,10 @@
             meuOponenteDiv.style.display = "block";
             
             if(card2.alive == false){
-                meuOponenteDiv.style.opacity = "0.1";
+                meuOponenteDiv.style.opacity = "0.4";
             }
-
-            renderizaBarraVida(vida, meuOponenteDiv);
+            const containerVidaOponente = document.getElementById("containerVidaOponente");
+            renderizaBarraVida(vida, containerVidaOponente);
         }
     
         function cardsLutem(){
