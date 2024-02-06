@@ -51,16 +51,21 @@ async function main(){
 
             if(card1.defense < 0){
                 card1.alive = false;
-                jogador1.mySocket.vida += card1.defense;
+                players[0].mySocket.vida += card1.defense;
             }
+            jogador1.personagem.defense = card1.defense;
             
             if(card2.defense < 0){
                 card2.alive = false;
-                jogador2.mySocket.vida += card2.defense;
+                players[1].mySocket.vida += card2.defense;
             }
+            jogador2.personagem.defense = card2.defense;
 
-            jogador1.mySocket.emit("reloadBoard", card1, jogador1.mySocket.vida, card2, jogador2.mySocket.vida);
-            jogador2.mySocket.emit("reloadBoard", card1, jogador1.mySocket.vida, card2, jogador2.mySocket.vida);
+            jogador1.personagem = card1;
+            jogador2.personagem = card2;
+
+            jogador1.mySocket.emit("reloadBoard", jogador1.personagem, jogador1.mySocket.vida, jogador2.personagem, jogador2.mySocket.vida);
+            jogador2.mySocket.emit("reloadBoard", jogador1.personagem, jogador1.mySocket.vida, jogador2.personagem, jogador2.mySocket.vida);
         });
     });
 
