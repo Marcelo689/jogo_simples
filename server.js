@@ -76,12 +76,12 @@ function calculateDamage(jogador1, jogador2, card1, card2){
 
     if(jogador1.personagem.defense < 0){
         jogador1.personagem.alive = false;
-        players[1].mySocket.vida += jogador1.personagem.defense;
+        players[0].mySocket.vida += jogador1.personagem.defense;
     }
     
     if(jogador2.personagem.defense < 0){
         jogador2.personagem.alive = false;
-        players[0].mySocket.vida += jogador2.personagem.defense;
+        players[1].mySocket.vida += jogador2.personagem.defense;
     }
 
 }
