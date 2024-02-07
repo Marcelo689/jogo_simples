@@ -53,26 +53,12 @@ async function main(){
                 jogador2.mySocket.emit("escolherNovoCard");
             }
 
-            card2.defense = card2.defense - card1.attack;
-            card1.defense = card1.defense - card2.attack;
-
-            if(card1.defense < 0){
-                card1.alive = false;
-                players[0].mySocket.vida += card1.defense;
-                jogador1.personagem.alive = card1.alive;
+            if(jogador2.personagem.alive == false || jogador1.personagem.alive == false){
+                return;
             }
-            jogador1.personagem.defense = card1.defense;
+
+            calculateDamage(jogador1,jogador2, card1, card2);
             
-            if(card2.defense < 0){
-                card2.alive = false;
-                players[1].mySocket.vida += card2.defense;
-                jogador2.personagem.alive = card2.alive;
-            }
-            jogador2.personagem.defense = card2.defense;
-
-            jogador1.personagem = card1;
-            jogador2.personagem = card2;
-
             jogador1.mySocket.emit("reloadBoard", jogador1.personagem, jogador1.mySocket.vida, jogador2.personagem, jogador2.mySocket.vida);
             jogador2.mySocket.emit("reloadBoard", jogador2.personagem, jogador2.mySocket.vida, jogador1.personagem, jogador1.mySocket.vida);
         });
@@ -82,6 +68,22 @@ async function main(){
     server.listen(port, () => {
         console.log('server running http://localhost:' + port);
     });
+}
+
+function calculateDamage(jogador1, jogador2, card1, card2){
+    jogador2.personagem.defense = jogador2.personagem.defense - jogador1.personagem.attack;
+    jogador1.personagem.defense = jogador1.personagem.defense - jogador2.personagem.attack;
+
+    if(jogador1.personagem.defense < 0){
+        jogador1.personagem.alive = false;
+        players[1].mySocket.vida += jogador1.personagem.defense;
+    }
+    
+    if(jogador2.personagem.defense < 0){
+        jogador2.personagem.alive = false;
+        players[0].mySocket.vida += jogador2.personagem.defense;
+    }
+
 }
 
 async function pegarPersonagens(){
