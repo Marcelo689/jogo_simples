@@ -137,6 +137,8 @@
         }
 
         socket.on("reloadBoard", (card1, vida1, card2, vida2) => {
+            cardEmMesa1 = card1;
+            cardEmMesa2 = card2;
             loadChar(card1, vida1);
             loadOponent(card2, vida2);
         });
@@ -174,10 +176,10 @@
             renderizaBarraVida(vida, divVidaPersonagem);
         }
         
-        socket.on("escolherNovoCard", () => {
+        socket.on("escolherNovoCard", (mensagem) => {
             var div = document.createElement("div");
 
-            div.innerText = "selecione um novo card";
+            div.innerText = mensagem;
             div.style.padding = "20px";
             div.style.marginLeft = "40vw";
             div.style.marginTop = "40vh";
@@ -221,7 +223,10 @@
             
             if(card2.alive == false){
                 meuOponenteDiv.style.opacity = "0.4";
+            }else{
+                meuOponenteDiv.style.opacity = "1";
             }
+
             const containerVidaOponente = document.getElementById("containerVidaOponente");
             renderizaBarraVida(vida, containerVidaOponente);
         }
@@ -245,7 +250,33 @@
             }
         }
 
+        function mensagemEspereOponente(){
+            var div = document.createElement("div");
+            div.innerText = "espere o oponente escolher um novo card!";
+            div.style.padding = "20px";
+            div.style.marginLeft = "40vw";
+            div.style.marginTop = "40vh";
+            div.style.textAlign = "center";
+            div.style.color = "red";
+            div.style.backgroundColor = "black";
+            div.style.position = "absolute";
+            div.style.zIndex = 20;
+
+            var divMensagem = document.getElementById("mensagem");
+            divMensagem.append(div);
+
+            setTimeout(() => {
+                divMensagem.innerHTML = "";
+                divMensagem.style.zIndex = -2;
+            }, 3000);
+        }
+
         function cardsLutem(){
+            if(cardEmMesa2.alive == false){
+                mensagemEspereOponente();
+                return;
+            }
+
             socket.emit("batalhar", cardEmMesa1, cardEmMesa2);
         }
 

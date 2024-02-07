@@ -61,11 +61,11 @@ async function main(){
             const jogador2 = players[1];
 
             if(personagemEncontrado1.alive == false){
-                jogador1.mySocket.emit("escolherNovoCard");
+                jogador1.mySocket.emit("escolherNovoCard", "selecione um novo card!");
             }
 
             if(personagemEncontrado2.alive == false){
-                jogador2.mySocket.emit("escolherNovoCard");
+                jogador2.mySocket.emit("escolherNovoCard", "selecione um novo card!");
             }
 
             if(personagemEncontrado2.alive == false || personagemEncontrado1.alive == false){
@@ -74,6 +74,9 @@ async function main(){
 
             calculateDamage(jogador1,jogador2, personagemEncontrado1, personagemEncontrado2);
             
+            card2 = personagemEncontrado2;
+            card1 = personagemEncontrado1;
+
             jogador1.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
             jogador2.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
         });
