@@ -58,11 +58,12 @@
     <p class="mensagem"> Esperando outro jogador</p>
 
     <div id="containerVidaPersonagem"></div>
+    <button class="btn-lutar"  onclick="cardsLutem()">Batalhar</button>
+    <div id="meusCardsMao"></div>
     <div id="meuPersonagem" class="container-player">
         <p class="my-name"></p>
     </div>
 
-    <button class="btn-lutar"  onclick="cardsLutem()">Batalhar</button>
 
     <div id="containerVidaOponente"></div>
     <div id="meuOponente" class="container-player"></div>
@@ -112,11 +113,13 @@
             container.prepend(barraVida);
         }
 
-        socket.on("loadChar", (nomePreenchido, vida , personagem) => {
+        socket.on("loadChar", (nomePreenchido, vida , personagem, cardsMao) => {
             const meuPersonagemDiv = document.getElementById("meuPersonagem");
+            const meusCards = document.getElementById("meusCardsMao");
+
             cardEmMesa1 = personagem;
             loadChar(personagem, vida);
-            
+            loadCardsMao(cardsMao, meusCards, vida);
             const containerVida = document.getElementById("containerVidaPersonagem");
             const pNome = document.createElement("p");
             pNome.textContent = nomePreenchido;
@@ -220,9 +223,33 @@
             const containerVidaOponente = document.getElementById("containerVidaOponente");
             renderizaBarraVida(vida, containerVidaOponente);
         }
-    
+        
+        function loadCardsMao(cardsMao, cardsMaoContainer, vida){
+            for (let index = 0; index < cardsMao.length; index++) {
+                const personagem = cardsMao[index];
+                
+                var cardImagem = document.createElement("img");
+                cardImagem.style.height = "200px";
+                cardImagem.style.width = "200px";
+                cardImagem.src = personagem.img;
+                cardImagem.border = "2px solid black";
+                cardImagem.style.margin = "2px";
+
+                cardImagem.addEventListener("click", () => {
+                    mudarParaCardClicado(personagem, vida);
+                });
+
+                cardsMaoContainer.append(cardImagem);
+            }
+        }
+
         function cardsLutem(){
             socket.emit("batalhar", cardEmMesa1, cardEmMesa2);
+        }
+
+        function mudarParaCardClicado(personagem, vida){
+            cardEmMesa1 = personagem;
+            loadChar(personagem, vida);
         }
     </script>
 </body>

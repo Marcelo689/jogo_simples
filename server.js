@@ -33,9 +33,14 @@ async function main(){
             players.push({ mySocket : socket, personagem: personagem })
             if(players.length  == 2){
                 const jogador1 = players[0];
-                jogador1.mySocket.emit("loadChar", jogador1.mySocket.nome, jogador1.mySocket.vida, jogador1.personagem);
+                jogador1.cardsMao = listaPersonagens;
+
+                jogador1.mySocket.emit("loadChar", jogador1.mySocket.nome, jogador1.mySocket.vida, jogador1.personagem, jogador1.cardsMao);
+                
                 const jogador2 = players[1];
-                jogador2.mySocket.emit("loadChar", jogador2.mySocket.nome, jogador2.mySocket.vida, jogador2.personagem);
+                jogador2.cardsMao = listaPersonagens;
+
+                jogador2.mySocket.emit("loadChar", jogador2.mySocket.nome, jogador2.mySocket.vida, jogador2.personagem, jogador2.cardsMao);
 
                 jogador2.mySocket.emit("loadOponent", jogador1.mySocket.vida, jogador1.personagem, jogador1.mySocket.nome);
                 jogador1.mySocket.emit("loadOponent", jogador2.mySocket.vida, jogador2.personagem, jogador2.mySocket.nome);
