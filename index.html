@@ -113,13 +113,13 @@
             container.prepend(barraVida);
         }
 
-        socket.on("loadChar", (nomePreenchido, vida , personagem, cardsMao) => {
+        socket.on("loadChar", (nomePreenchido, vida , personagem, cardsMao, primeiroJogador) => {
             const meuPersonagemDiv = document.getElementById("meuPersonagem");
             const meusCards = document.getElementById("meusCardsMao");
 
             cardEmMesa1 = personagem;
             loadChar(personagem, vida);
-            loadCardsMao(cardsMao, meusCards, vida);
+            loadCardsMao(cardsMao, meusCards, vida, primeiroJogador);
             const containerVida = document.getElementById("containerVidaPersonagem");
             const pNome = document.createElement("p");
             pNome.textContent = nomePreenchido;
@@ -234,7 +234,7 @@
             renderizaBarraVida(vida, containerVidaOponente);
         }
         
-        function loadCardsMao(cardsMao, cardsMaoContainer, vida){
+        function loadCardsMao(cardsMao, cardsMaoContainer, vida,primeiroJogador){
             for (let index = 0; index < cardsMao.length; index++) {
                 const personagem = cardsMao[index];
                 
@@ -246,7 +246,7 @@
                 cardImagem.style.margin = "2px";
 
                 cardImagem.addEventListener("click", () => {
-                    mudarParaCardClicado(personagem, vida);
+                    mudarParaCardClicado(personagem, vida, primeiroJogador);
                 });
 
                 cardsMaoContainer.append(cardImagem);
@@ -284,9 +284,9 @@
             socket.emit("batalhar", cardEmMesa1, cardEmMesa2);
         }
 
-        function mudarParaCardClicado(personagem, vida){
+        function mudarParaCardClicado(personagem, vida, primeiroJogador){
             cardEmMesa1 = personagem;
-            socket.emit("reloadPlayers", personagem, cardEmMesa2);
+            socket.emit("reloadPlayers", cardEmMesa1, cardEmMesa2, primeiroJogador);
         }
     </script>
 </body>

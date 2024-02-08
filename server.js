@@ -33,16 +33,23 @@ async function main(){
         socket.on("meu-nome", async (nome) => {
             socket.nome = nome; 
             socket.vida = 10000;
+
             players.push({ mySocket : socket, personagem: personagem })
+
+            if(players.length == 1){
+                socket.primeiroJogador = true;
+            }
+
             if(players.length  == 2){
                 
+                socket.primeiroJogador = false;
                 const jogador1 = players[0];
                 jogador1.cardsMao = listaPersonagens;
-                jogador1.mySocket.emit("loadChar", jogador1.mySocket.nome, jogador1.mySocket.vida, jogador1.personagem, jogador1.cardsMao);
+                jogador1.mySocket.emit("loadChar", jogador1.mySocket.nome, jogador1.mySocket.vida, jogador1.personagem, jogador1.cardsMao,  jogador1.mySocket.primeiroJogador);
                 
                 const jogador2 = players[1];
                 jogador2.cardsMao = listaPersonagens;
-                jogador2.mySocket.emit("loadChar", jogador2.mySocket.nome, jogador2.mySocket.vida, jogador2.personagem, jogador2.cardsMao);
+                jogador2.mySocket.emit("loadChar", jogador2.mySocket.nome, jogador2.mySocket.vida, jogador2.personagem, jogador2.cardsMao, jogador2.mySocket.primeiroJogador);
 
                 jogador2.mySocket.emit("loadOponent", jogador1.mySocket.vida, jogador1.personagem, jogador1.mySocket.nome);
                 jogador1.mySocket.emit("loadOponent", jogador2.mySocket.vida, jogador2.personagem, jogador2.mySocket.nome);
@@ -81,7 +88,7 @@ async function main(){
             jogador2.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
         });
 
-        socket.on("reloadPlayers", (card1, card2) => {  
+        socket.on("reloadPlayers", (card1, card2, primeiroJogador) => {  
             var uid1 = card1.uid;
             var personagemEncontrado1 = listaIntocada.find( e => e.uid == uid1);
 
@@ -91,8 +98,15 @@ async function main(){
             const jogador1 = players[0];
             const jogador2 = players[1];
 
-            jogador1.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
-            jogador2.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
+            if(primeiroJogador){
+                jogador2.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
+                jogador1.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
+
+            }else{
+                jogador1.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
+                jogador2.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
+            }
+
         })
         
     });
