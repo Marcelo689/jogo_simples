@@ -28,9 +28,9 @@ async function main(){
         var usuarioId = socket.id;
         
         var listaPersonagens = await pegarPersonagens();
-        listaIntocada   = [...listaPersonagens];
-        listaIntocadaP1 = [...listaPersonagens];
-        listaIntocadaP2 = [...listaPersonagens];
+        listaIntocada   = criaCloneArray(listaPersonagens);
+        listaIntocadaP1 = criaCloneArray(listaIntocada);
+        listaIntocadaP2 = criaCloneArray(listaIntocadaP1);
         var numeroAleatorio = Math.floor(Math.random() * listaPersonagens.length);
         const personagem =  listaPersonagens.splice( numeroAleatorio, 1)[0];
         
@@ -141,6 +141,26 @@ function calculateDamage(jogador1, jogador2, personagemEncontrado1, personagemEn
         jogador2.mySocket.vida += personagemEncontrado2.defense;
     }
 
+}
+
+function criaCloneArray(listaPersonagens){
+    if(listaPersonagens < 1)
+        return;
+
+    var chaves = Object.keys(listaPersonagens[0])
+
+    var listaSaida = [];
+
+    listaPersonagens.forEach( elemento => {
+        var objetoCriado = {};
+        chaves.forEach( chave => {
+            var valor = elemento[chave];
+            objetoCriado[chave]= valor;
+        });
+        listaSaida. push(objetoCriado);
+    });
+
+    return listaSaida;
 }
 
 async function pegarPersonagens(){
