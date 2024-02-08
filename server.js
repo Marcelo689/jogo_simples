@@ -80,6 +80,21 @@ async function main(){
             jogador1.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
             jogador2.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
         });
+
+        socket.on("reloadPlayers", (card1, card2) => {  
+            var uid1 = card1.uid;
+            var personagemEncontrado1 = listaIntocada.find( e => e.uid == uid1);
+
+            var uid2 = card2.uid;
+            var personagemEncontrado2 = listaIntocada.find( e => e.uid == uid2);
+
+            const jogador1 = players[0];
+            const jogador2 = players[1];
+
+            jogador1.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
+            jogador2.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
+        })
+        
     });
 
     const port = 3000;

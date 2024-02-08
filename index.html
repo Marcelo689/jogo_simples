@@ -144,6 +144,7 @@
         });
 
         function loadChar(card1, vida){
+            cardEmMesa1 = card1;
             var nome = document.createElement("p");
             nome.textContent = card1.name;
             nome.className = "class-name";
@@ -174,6 +175,7 @@
 
             const divVidaPersonagem = document.getElementById("containerVidaPersonagem");
             renderizaBarraVida(vida, divVidaPersonagem);
+
         }
         
         socket.on("escolherNovoCard", (mensagem) => {
@@ -199,6 +201,7 @@
         })
 
         function loadOponent(card2, vida){
+            cardEmMesa2 = card2;
             var nome = document.createElement("p");
             nome = card2.name;
             nome.className = "class-name";
@@ -273,6 +276,7 @@
 
         function cardsLutem(){
             if(cardEmMesa2.alive == false){
+                socket.emit("reloadPlayers", personagem, cardEmMesa2);
                 mensagemEspereOponente();
                 return;
             }
@@ -282,7 +286,7 @@
 
         function mudarParaCardClicado(personagem, vida){
             cardEmMesa1 = personagem;
-            loadChar(personagem, vida);
+            socket.emit("reloadPlayers", personagem, cardEmMesa2);
         }
     </script>
 </body>
