@@ -49,6 +49,7 @@
     </style>
 </head>
 <body>
+    <button class="btn-lutar"  onclick="cardsLutem()">Batalhar</button>
     <form >
         <label for="usuario">Digite seu nome</label>
         <input type="text" name="usuario" id="usuario">
@@ -58,7 +59,6 @@
     <p class="mensagem"> Esperando outro jogador</p>
 
     <div id="containerVidaPersonagem"></div>
-    <button class="btn-lutar"  onclick="cardsLutem()">Batalhar</button>
     <div id="meusCardsMao"></div>
     <div id="meuPersonagem" class="container-player">
         <p class="my-name"></p>
@@ -102,10 +102,18 @@
 
         function renderizaBarraVida(vida, container){
             const barraVida = document.createElement("div");
-            barraVida.style.width = (vida / 10).toString()+"px";
+
+            if(vida < 0){
+                barraVida.style.width = "0px";
+                barraVida.style.color = "red";
+                barraVida.style.backgroundColor = "black";
+
+            }else{
+                barraVida.style.width = (vida / 10).toString()+"px";
+                barraVida.style.backgroundColor = "lightgreen";
+            }
             barraVida.style.height = "20px";
             barraVida.style.margin = "10px";
-            barraVida.style.backgroundColor = "lightgreen";
             barraVida.textContent = vida;
             barraVida.style.textAlign = "center";
 

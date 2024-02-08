@@ -7,6 +7,8 @@ const {open} = require("sqlite");
 
 let numeroclientes = 0;
 var listaIntocada;
+var listaIntocadaP1;
+var listaIntocadaP2;
 var players = [];
 async function main(){
 
@@ -26,7 +28,9 @@ async function main(){
         var usuarioId = socket.id;
         
         var listaPersonagens = await pegarPersonagens();
-        listaIntocada = [...listaPersonagens];
+        listaIntocada   = [...listaPersonagens];
+        listaIntocadaP1 = [...listaPersonagens];
+        listaIntocadaP2 = [...listaPersonagens];
         var numeroAleatorio = Math.floor(Math.random() * listaPersonagens.length);
         const personagem =  listaPersonagens.splice( numeroAleatorio, 1)[0];
         
@@ -44,11 +48,11 @@ async function main(){
                 
                 socket.primeiroJogador = false;
                 const jogador1 = players[0];
-                jogador1.cardsMao = listaPersonagens;
+                jogador1.cardsMao = listaIntocadaP1;
                 jogador1.mySocket.emit("loadChar", jogador1.mySocket.nome, jogador1.mySocket.vida, jogador1.personagem, jogador1.cardsMao,  jogador1.mySocket.primeiroJogador);
                 
                 const jogador2 = players[1];
-                jogador2.cardsMao = listaPersonagens;
+                jogador2.cardsMao = listaIntocadaP2;
                 jogador2.mySocket.emit("loadChar", jogador2.mySocket.nome, jogador2.mySocket.vida, jogador2.personagem, jogador2.cardsMao, jogador2.mySocket.primeiroJogador);
 
                 jogador2.mySocket.emit("loadOponent", jogador1.mySocket.vida, jogador1.personagem, jogador1.mySocket.nome);
@@ -59,10 +63,10 @@ async function main(){
         socket.on("batalhar", async (card1, card2) => {
             
             var uid1 = card1.uid;
-            var personagemEncontrado1 = listaIntocada.find( e => e.uid == uid1);
+            var personagemEncontrado1 = listaIntocadaP1.find( e => e.uid == uid1);
 
             var uid2 = card2.uid;
-            var personagemEncontrado2 = listaIntocada.find( e => e.uid == uid2);
+            var personagemEncontrado2 = listaIntocadaP2.find( e => e.uid == uid2);
 
             const jogador1 = players[0];
             const jogador2 = players[1];
@@ -84,16 +88,22 @@ async function main(){
             card2 = personagemEncontrado2;
             card1 = personagemEncontrado1;
 
-            jogador1.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
-            jogador2.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
+            if(socket.primeiroJogador){
+                jogador2.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
+                jogador1.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
+            }else{
+                jogador1.mySocket.emit("reloadBoard", personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
+                jogador2.mySocket.emit("reloadBoard", personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
+            }
+
         });
 
         socket.on("reloadPlayers", (card1, card2, primeiroJogador) => {  
             var uid1 = card1.uid;
-            var personagemEncontrado1 = listaIntocada.find( e => e.uid == uid1);
+            var personagemEncontrado1 = listaIntocadaP1.find( e => e.uid == uid1);
 
             var uid2 = card2.uid;
-            var personagemEncontrado2 = listaIntocada.find( e => e.uid == uid2);
+            var personagemEncontrado2 = listaIntocadaP2.find( e => e.uid == uid2);
 
             const jogador1 = players[0];
             const jogador2 = players[1];
