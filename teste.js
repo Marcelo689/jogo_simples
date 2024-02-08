@@ -33,10 +33,15 @@ function criaCloneArray(listaPersonagens){
             var valor = elemento[chave];
             objetoCriado[chave]= valor;
         });
-        listaSaida. push(objetoCriado);
+        listaSaida.push(objetoCriado);
     });
 
     return listaSaida;
 }
 
-console.log(criaCloneArray(listaPersonagens));
+
+
+var novaLista = criaCloneArray(listaPersonagens);
+listaPersonagens[0].nome = "novo usuario";
+console.log(listaPersonagens)
+console.log(novaLista);

@@ -29,8 +29,8 @@ async function main(){
         
         var listaPersonagens = await pegarPersonagens();
         listaIntocada   = criaCloneArray(listaPersonagens);
-        listaIntocadaP1 = criaCloneArray(listaIntocada);
-        listaIntocadaP2 = criaCloneArray(listaIntocadaP1);
+        listaIntocadaP1 = criaCloneArray(listaPersonagens);
+        listaIntocadaP2 = criaCloneArray(listaPersonagens);
         var numeroAleatorio = Math.floor(Math.random() * listaPersonagens.length);
         const personagem =  listaPersonagens.splice( numeroAleatorio, 1)[0];
         
@@ -61,12 +61,18 @@ async function main(){
         });
 
         socket.on("batalhar", async (card1, card2) => {
-            
             var uid1 = card1.uid;
-            var personagemEncontrado1 = listaIntocadaP1.find( e => e.uid == uid1);
-
             var uid2 = card2.uid;
-            var personagemEncontrado2 = listaIntocadaP2.find( e => e.uid == uid2);
+            var personagemEncontrado1;
+            var personagemEncontrado2;
+
+            if(socket.primeiroJogador == true){
+                personagemEncontrado1 = listaIntocadaP1.find( e => e.uid == uid1);
+                personagemEncontrado2 = listaIntocadaP2.find( e => e.uid == uid2);
+            }else{
+                personagemEncontrado2 = listaIntocadaP1.find( e => e.uid == uid1);
+                personagemEncontrado1 = listaIntocadaP2.find( e => e.uid == uid2);
+            }
 
             const jogador1 = players[0];
             const jogador2 = players[1];
