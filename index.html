@@ -261,9 +261,9 @@
             }
         }
 
-        function mensagemEspereOponente(){
+        function mensagemEspereOponente(mensagem = "espere o oponente escolher um novo card!"){
             var div = document.createElement("div");
-            div.innerText = "espere o oponente escolher um novo card!";
+            div.innerText = mensagem;
             div.style.padding = "20px";
             div.style.marginLeft = "40vw";
             div.style.marginTop = "40vh";
@@ -283,8 +283,12 @@
         }
 
         function cardsLutem(){
+            if(cardEmMesa1.alive == false){
+                mensagemEspereOponente("selecione um novo card")
+                return;
+            }
+
             if(cardEmMesa2.alive == false){
-                socket.emit("reloadPlayers", personagem, cardEmMesa2);
                 mensagemEspereOponente();
                 return;
             }
