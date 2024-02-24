@@ -144,11 +144,17 @@
             elemento.style.display = "none";
         }
 
-        socket.on("reloadBoard", (card1, vida1, card2, vida2) => {
+        socket.on("reloadBoard", (primeiroJogador, card1, vida1, card2, vida2) => {
             cardEmMesa1 = card1;
             cardEmMesa2 = card2;
-            loadChar(card1, vida1);
-            loadOponent(card2, vida2);
+            if (primeiroJogador) {
+                loadChar(card1, vida1);
+                loadOponent(card2, vida2);
+            } else {
+                loadChar(card2, vida2);
+                loadOponent(card1, vida1);
+            }
+            
         });
 
         function loadChar(card1, vida){
