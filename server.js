@@ -70,8 +70,8 @@ async function main(){
                 personagemEncontrado1 = listaIntocadaP1.find( e => e.uid == uid1);
                 personagemEncontrado2 = listaIntocadaP2.find( e => e.uid == uid2);
             }else{
-                personagemEncontrado2 = listaIntocadaP1.find( e => e.uid == uid1);
-                personagemEncontrado1 = listaIntocadaP2.find( e => e.uid == uid2);
+                personagemEncontrado1 = listaIntocadaP2.find( e => e.uid == uid1);
+                personagemEncontrado2 = listaIntocadaP1.find( e => e.uid == uid2);
             }
 
             const jogador1 = players[0];
@@ -89,7 +89,7 @@ async function main(){
                 return;
             }
 
-            calculateDamage(jogador1,jogador2, personagemEncontrado1, personagemEncontrado2);
+            calculateDamage(jogador1,jogador2, personagemEncontrado1, personagemEncontrado2, socket.primeiroJogador);
             
             card2 = personagemEncontrado2;
             card1 = personagemEncontrado1;
@@ -110,13 +110,14 @@ async function main(){
             var personagemEncontrado1;
             var personagemEncontrado2;
 
-            if (primeiroJogador) {
-                personagemEncontrado1 = listaIntocadaP1.find(e => e.uid == uid1);
-                personagemEncontrado2 = listaIntocadaP2.find(e => e.uid == uid2);
-            } else {
-                personagemEncontrado2 = listaIntocadaP1.find(e => e.uid == uid1);
-                personagemEncontrado1 = listaIntocadaP2.find(e => e.uid == uid2);
+            if(socket.primeiroJogador == true){
+                personagemEncontrado1 = listaIntocadaP1.find( e => e.uid == uid1);
+                personagemEncontrado2 = listaIntocadaP2.find( e => e.uid == uid2);
+            }else{
+                personagemEncontrado1 = listaIntocadaP2.find( e => e.uid == uid1);
+                personagemEncontrado2 = listaIntocadaP1.find( e => e.uid == uid2);
             }
+
             const jogador1 = players[0];
             const jogador2 = players[1];
 
@@ -125,8 +126,8 @@ async function main(){
                 jogador1.mySocket.emit("reloadBoard", primeiroJogador, personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
 
             }else{
-                jogador1.mySocket.emit("reloadBoard", primeiroJogador, personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
-                jogador2.mySocket.emit("reloadBoard", primeiroJogador, personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
+                jogador2.mySocket.emit("reloadBoard", primeiroJogador, personagemEncontrado2, jogador2.mySocket.vida, personagemEncontrado1, jogador1.mySocket.vida);
+                jogador1.mySocket.emit("reloadBoard", primeiroJogador, personagemEncontrado1, jogador1.mySocket.vida, personagemEncontrado2, jogador2.mySocket.vida);
             }
 
         })
@@ -139,7 +140,7 @@ async function main(){
     });
 }
 
-function calculateDamage(jogador1, jogador2, personagemEncontrado1, personagemEncontrado2){
+function calculateDamage(jogador1, jogador2, personagemEncontrado1, personagemEncontrado2, primeiroJogador){
     personagemEncontrado2.defense = personagemEncontrado2.defense - personagemEncontrado1.attack;
     personagemEncontrado1.defense = personagemEncontrado1.defense - personagemEncontrado2.attack;
 
@@ -151,6 +152,20 @@ function calculateDamage(jogador1, jogador2, personagemEncontrado1, personagemEn
     if(personagemEncontrado2.defense < 0){
         personagemEncontrado2.alive = false;
         jogador2.mySocket.vida += personagemEncontrado2.defense;
+    }
+
+    if(primeiroJogador){
+        var p1 = listaIntocadaP2.find(e => e.uid == personagemEncontrado2.uid);
+        p1 = personagemEncontrado1;
+        
+        var p2 = listaIntocadaP1.find(e => e.uid == personagemEncontrado1.uid);
+        p2 = personagemEncontrado2;
+    }else{
+        var p1 = listaIntocadaP2.find(e => e.uid == personagemEncontrado1.uid);
+        p1 = personagemEncontrado1;
+        
+        var p2 = listaIntocadaP1.find(e => e.uid == personagemEncontrado2.uid);
+        p2 = personagemEncontrado2;
     }
 
 }
